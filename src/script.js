@@ -130,7 +130,6 @@ const planetMeshes = planets.map((planet) => {
   });
   return planetMesh;
 });
-console.log(planetMeshes);
 // initialize the camera
 const camera = new THREE.PerspectiveCamera(
   35,
@@ -167,29 +166,41 @@ window.addEventListener("resize", () => {
 //initialize a clock
 const clock = new THREE.Clock();
 
+// Animating parent planets
+const animateParentPlanets = (planet, planetIndex) => {
+  planet.rotation.y += planets[planetIndex].speed;
+  planet.position.x =
+    Math.sin(planet.rotation.y) * planets[planetIndex].distance;
+  planet.position.z =
+    Math.cos(planet.rotation.y) * planets[planetIndex].distance;
+};
+// Animating moons
+const animateMoons = (moon, moonIndex, planetIndex) => {
+  moon.rotation.y += planets[planetIndex].moons[moonIndex].speed;
+  moon.position.x =
+    Math.sin(moon.rotation.y) * planets[planetIndex].moons[moonIndex].distance;
+  moon.position.z =
+    Math.cos(moon.rotation.y) * planets[planetIndex].moons[moonIndex].distance;
+};
+
+// Animating planets
+const animatePlanets = () => {
+  planetMeshes.forEach((planet, planetIndex) => {
+    animateParentPlanets(planet, planetIndex);
+    planet.children.forEach((moon, moonIndex) => {
+      animateMoons(moon, moonIndex, planetIndex);
+    });
+  });
+};
+
 // render loop
 const renderloop = () => {
   const elapsedTime = clock.getElapsedTime();
   sun.rotation.y += 0.001;
-  planetMeshes.forEach((planet, planetIndex) => {
-    planet.rotation.y += planets[planetIndex].speed;
-    planet.position.x =
-      Math.sin(planet.rotation.y) * planets[planetIndex].distance;
-    planet.position.z =
-      Math.cos(planet.rotation.y) * planets[planetIndex].distance;
-    planet.children.forEach((moon, moonIndex) => {
-      moon.rotation.y += planets[planetIndex].moons[moonIndex].speed;
-      moon.position.x =
-        Math.sin(moon.rotation.y) *
-        planets[planetIndex].moons[moonIndex].distance;
-      moon.position.z =
-        Math.cos(moon.rotation.y) *
-        planets[planetIndex].moons[moonIndex].distance;
-    });
-  });
   controls.update();
   renderer.render(scene, camera);
   window.requestAnimationFrame(renderloop);
+  animatePlanets();
 };
 
 renderloop();

@@ -25,5 +25,8 @@ Es simuliert die Planetenbewegungen und erlaubt es, das Sonnensystem **live im B
 1. Repository klonen:  
    ```bash
    git clone https://github.com/R-Nejara/simple-solar-system-project.git
+   ```
+2.
    ```bash
    npm run dev
+   ```

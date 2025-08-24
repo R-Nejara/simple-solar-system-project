@@ -26,7 +26,7 @@ Es simuliert die Planetenbewegungen und erlaubt es, das Sonnensystem **live im B
    ```bash
    git clone https://github.com/R-Nejara/simple-solar-system-project.git
    ```
-2. Server mit Vite starten
+2. Server mit Vite starten:
    ```bash
    npm run dev
    ```

@@ -19,7 +19,7 @@ Es simuliert die Planetenbewegungen und erlaubt es, das Sonnensystem **live im B
 - HTML & CSS  
 
 ## 🔗 Live Demo
-[Hier klicken, um das Sonnensystem im Browser zu sehen](https://transcendent-vacherin-7b4978.netlify.app/)
+[Hier klicken für Live-Demo](https://dapper-bienenstitch-759165.netlify.app/)
 
 ## Installation / Nutzung
 1. Repository klonen:  

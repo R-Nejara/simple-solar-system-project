@@ -170,6 +170,7 @@ const clock = new THREE.Clock();
 // render loop
 const renderloop = () => {
   const elapsedTime = clock.getElapsedTime();
+  sun.rotation.y += 0.001;
   planetMeshes.forEach((planet, planetIndex) => {
     planet.rotation.y += planets[planetIndex].speed;
     planet.position.x =

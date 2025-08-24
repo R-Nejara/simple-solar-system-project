@@ -11,7 +11,6 @@ const scene = new THREE.Scene();
 // add texture loader
 const textureLoader = new THREE.TextureLoader();
 const cubeTextureLoader = new THREE.CubeTextureLoader();
-cubeTextureLoader.setPath("textures/cubeMap/");
 
 //add textures
 const sunTexture = textureLoader.load("/textures/2k_sun.jpg");
@@ -20,6 +19,10 @@ const venusTexture = textureLoader.load("/textures/2k_venus_surface.jpg");
 const earthTexture = textureLoader.load("/textures/2k_earth_daymap.jpg");
 const moonTexture = textureLoader.load("/textures/2k_moon.jpg");
 const marsTexture = textureLoader.load("textures/2k_mars.jpg");
+const backgroundTexture = textureLoader.load(
+  "/textures/2k_stars_milky_way.jpg"
+);
+cubeTextureLoader.setPath("textures/cubeMap/");
 const cubeMapBackground = cubeTextureLoader.load([
   "px.png",
   "nx.png",
@@ -29,7 +32,6 @@ const cubeMapBackground = cubeTextureLoader.load([
   "nz.png",
 ]);
 scene.background = cubeMapBackground;
-
 // add materials
 const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });
 const mercuryMaterial = new THREE.MeshStandardMaterial({ map: mercuryTexture });
@@ -94,85 +96,41 @@ const planets = [
       {
         name: "Deimos",
         radius: 0.2,
-        distance: -3,
+        distance: 3,
         speed: 0.015,
         color: 0xffffff,
       },
     ],
   },
 ];
+
+const createPlanet = (planet) => {
+  //create the mesh and add it to the scene
+  const planetMesh = new THREE.Mesh(sphereGeometry, planet.material);
+  //set the scale
+  planetMesh.scale.setScalar(planet.radius);
+  planetMesh.position.x = planet.distance;
+  return planetMesh;
+};
+const createMoon = (moon) => {
+  const moonMesh = new THREE.Mesh(sphereGeometry, moonMaterial);
+  moonMesh.scale.setScalar(moon.radius);
+  moonMesh.position.x = moon.distance;
+  return moonMesh;
+};
+
 //function for creating planets
-// setPlanetAtribute function
-const setPlanetAttribute = (planetObject, planet) => {
-  planet.scale.setScalar(planetObject.radius);
-  planet.position.x = planetObject.distance;
-  planet.distance = planetObject.distance;
-  planet.speed = planetObject.speed;
-  planet.name = planetObject.name;
-  planet.castShadow = true;
-  planet.receiveShadow = true;
+const planetMeshes = planets.map((planet) => {
+  const planetMesh = createPlanet(planet);
+  scene.add(planetMesh);
 
-  return planet;
-};
-
-// setMoonAttributes
-const setMoonAttribute = (moonObject, moon) => {
-  moon.name = moonObject.name;
-  moon.scale.setScalar(moonObject.radius);
-  moon.distance = moonObject.distance;
-  moon.speed = moonObject.speed;
-  moon.position.x = moonObject.distance;
-  moon.castShadow = true;
-  moon.receiveShadow = true;
-};
-
-// createMoon function
-const createMoons = (moonList) => {
-  if (moonList.length != 0) {
-    let moonGroup = new THREE.Group();
-    moonList.forEach((moonObject) => {
-      const moonGeometry = new THREE.SphereGeometry(moonObject.radius, 32, 32);
-      const moon = new THREE.Mesh(moonGeometry, moonMaterial);
-      setMoonAttribute(moonObject, moon);
-      moonGroup.add(moon);
-    });
-    return moonGroup;
-  }
-};
-
-const createPlanets = () => {
-  // initialize Group for planets
-  let group = new THREE.Group();
-  planets.forEach((planetObject) => {
-    const planetGeometry = new THREE.SphereGeometry(
-      planetObject.radius,
-      32,
-      32
-    );
-    let planet = new THREE.Mesh(planetGeometry, planetObject.material);
-    planet = setPlanetAttribute(planetObject, planet);
-    group.add(planet);
-    if (planetObject.moons.length != 0) {
-      const moonGroup = createMoons(planetObject.moons);
-      planet.add(moonGroup);
-    }
+  planet.moons.forEach((moon) => {
+    const moonMesh = createMoon(moon);
+    planetMesh.add(moonMesh);
   });
-  //return Group of all Planets
-  return group;
-};
-const group = createPlanets();
-scene.add(group);
-
-//Queryselectors for each Planet
-const earth = group.getObjectByName("Earth");
-const mercury = group.getObjectByName("Mercury");
-const mars = group.getObjectByName("Mars");
-const venus = group.getObjectByName("Venus");
-const moon = group.getObjectByName("Moon");
-const phobos = group.getObjectByName("Phobos");
-const deimos = group.getObjectByName("Deimos");
-const planetsArray = [earth, mercury, mars, venus, moon, phobos, deimos];
-
+  return planetMesh;
+});
+console.log(planetMeshes);
 // initialize the camera
 const camera = new THREE.PerspectiveCamera(
   35,
@@ -183,16 +141,16 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.z = 100;
 camera.position.y = 5;
 
-const pointLight = new THREE.PointLight(0xffffff, 100);
-scene.add(pointLight);
-pointLight.castShadow = true;
+const pointLight = new THREE.PointLight(0xffffff, 20);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.02);
+sun.add(pointLight);
+sun.add(ambientLight);
+
 // initialize the renderer
 const canvas = document.querySelector("canvas.threejs");
 const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFShadowMap;
 
 // add controls
 const controls = new OrbitControls(camera, canvas);
@@ -212,17 +170,25 @@ const clock = new THREE.Clock();
 // render loop
 const renderloop = () => {
   const elapsedTime = clock.getElapsedTime();
+  planetMeshes.forEach((planet, planetIndex) => {
+    planet.rotation.y += planets[planetIndex].speed;
+    planet.position.x =
+      Math.sin(planet.rotation.y) * planets[planetIndex].distance;
+    planet.position.z =
+      Math.cos(planet.rotation.y) * planets[planetIndex].distance;
+    planet.children.forEach((moon, moonIndex) => {
+      moon.rotation.y += planets[planetIndex].moons[moonIndex].speed;
+      moon.position.x =
+        Math.sin(moon.rotation.y) *
+        planets[planetIndex].moons[moonIndex].distance;
+      moon.position.z =
+        Math.cos(moon.rotation.y) *
+        planets[planetIndex].moons[moonIndex].distance;
+    });
+  });
   controls.update();
   renderer.render(scene, camera);
   window.requestAnimationFrame(renderloop);
-  planetsArray.forEach((planet) => {
-    animatePlanet(planet, elapsedTime);
-  });
-};
-const animatePlanet = (planet, elapsedTime) => {
-  planet.position.x = Math.sin(elapsedTime * planet.speed) * planet.distance;
-  planet.position.z = Math.cos(elapsedTime * planet.speed) * planet.distance;
-  planet.rotation.y += planet.speed / 10;
 };
 
 renderloop();

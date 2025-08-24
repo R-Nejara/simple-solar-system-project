@@ -10,7 +10,9 @@ const scene = new THREE.Scene();
 
 // add texture loader
 const textureLoader = new THREE.TextureLoader();
-scene.background = textureLoader.load("/textures/8k_stars_milky_way.jpg");
+const cubeTextureLoader = new THREE.CubeTextureLoader();
+cubeTextureLoader.setPath("textures/cubeMap/");
+
 //add textures
 const sunTexture = textureLoader.load("/textures/2k_sun.jpg");
 const mercuryTexture = textureLoader.load("/textures/2k_mercury.jpg");
@@ -18,6 +20,15 @@ const venusTexture = textureLoader.load("/textures/2k_venus_surface.jpg");
 const earthTexture = textureLoader.load("/textures/2k_earth_daymap.jpg");
 const moonTexture = textureLoader.load("/textures/2k_moon.jpg");
 const marsTexture = textureLoader.load("textures/2k_mars.jpg");
+const cubeMapBackground = cubeTextureLoader.load([
+  "px.png",
+  "nx.png",
+  "py.png",
+  "ny.png",
+  "pz.png",
+  "nz.png",
+]);
+scene.background = cubeMapBackground;
 
 // add materials
 const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });

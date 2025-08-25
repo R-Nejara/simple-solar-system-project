@@ -110,12 +110,16 @@ const createPlanet = (planet) => {
   //set the scale
   planetMesh.scale.setScalar(planet.radius);
   planetMesh.position.x = planet.distance;
+  planetMesh.speed = planet.speed;
+  planetMesh.distance = planet.distance;
   return planetMesh;
 };
 const createMoon = (moon) => {
   const moonMesh = new THREE.Mesh(sphereGeometry, moonMaterial);
   moonMesh.scale.setScalar(moon.radius);
   moonMesh.position.x = moon.distance;
+  moonMesh.speed = moon.speed;
+  moonMesh.distance = moon.distance;
   return moonMesh;
 };
 
@@ -167,28 +171,25 @@ window.addEventListener("resize", () => {
 const clock = new THREE.Clock();
 
 // Animating parent planets
-const animateParentPlanets = (planet, planetIndex) => {
-  planet.rotation.y += planets[planetIndex].speed;
-  planet.position.x =
-    Math.sin(planet.rotation.y) * planets[planetIndex].distance;
-  planet.position.z =
-    Math.cos(planet.rotation.y) * planets[planetIndex].distance;
+const animateParentPlanets = (planet) => {
+  planet.rotation.y += planet.speed;
+  planet.position.x = Math.sin(planet.rotation.y) * planet.distance;
+  planet.position.z = Math.cos(planet.rotation.y) * planet.distance;
 };
 // Animating moons
-const animateMoons = (moon, moonIndex, planetIndex) => {
-  moon.rotation.y += planets[planetIndex].moons[moonIndex].speed;
-  moon.position.x =
-    Math.sin(moon.rotation.y) * planets[planetIndex].moons[moonIndex].distance;
-  moon.position.z =
-    Math.cos(moon.rotation.y) * planets[planetIndex].moons[moonIndex].distance;
+const animateMoons = (moon) => {
+  moon.rotation.y += moon.speed;
+  moon.position.x = Math.sin(moon.rotation.y) * moon.distance;
+  moon.position.z = Math.cos(moon.rotation.y) * moon.distance;
 };
 
 // Animating planets
 const animatePlanets = () => {
-  planetMeshes.forEach((planet, planetIndex) => {
-    animateParentPlanets(planet, planetIndex);
-    planet.children.forEach((moon, moonIndex) => {
-      animateMoons(moon, moonIndex, planetIndex);
+  sun.rotation.y += 0.001;
+  planetMeshes.forEach((planet) => {
+    animateParentPlanets(planet);
+    planet.children.forEach((moon) => {
+      animateMoons(moon);
     });
   });
 };
@@ -196,7 +197,6 @@ const animatePlanets = () => {
 // render loop
 const renderloop = () => {
   const elapsedTime = clock.getElapsedTime();
-  sun.rotation.y += 0.001;
   controls.update();
   renderer.render(scene, camera);
   window.requestAnimationFrame(renderloop);

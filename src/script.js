@@ -144,8 +144,8 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.z = 100;
 camera.position.y = 5;
 
-const pointLight = new THREE.PointLight(0xffffff, 20);
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.02);
+const pointLight = new THREE.PointLight(0xffffff, 200);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.05);
 sun.add(pointLight);
 sun.add(ambientLight);
 

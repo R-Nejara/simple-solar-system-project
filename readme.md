@@ -19,7 +19,7 @@ Es simuliert die Planetenbewegungen und erlaubt es, das Sonnensystem **live im B
 - HTML & CSS  
 
 ## 🔗 Live Demo
-[Hier klicken für Live-Demo](https://bespoke-seahorse-2b6d16.netlify.app/)
+[Hier klicken für Live-Demo](https://phenomenal-daffodil-400215.netlify.app/)
 
 ## Installation / Nutzung
 1. Repository klonen:  

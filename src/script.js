@@ -144,6 +144,7 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.z = 100;
 camera.position.y = 5;
 
+// initialize
 const pointLight = new THREE.PointLight(0xffffff, 200);
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.05);
 sun.add(pointLight);
@@ -167,8 +168,6 @@ window.addEventListener("resize", () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
-//initialize a clock
-const clock = new THREE.Clock();
 
 // Animating parent planets
 const animateParentPlanets = (planet) => {
@@ -196,7 +195,6 @@ const animatePlanets = () => {
 
 // render loop
 const renderloop = () => {
-  const elapsedTime = clock.getElapsedTime();
   controls.update();
   renderer.render(scene, camera);
   window.requestAnimationFrame(renderloop);

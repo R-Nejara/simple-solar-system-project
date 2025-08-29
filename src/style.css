@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap");
 body {
   margin: 0;
   overflow: hidden;
@@ -24,4 +25,13 @@ body {
   --tp-label-foreground-color: hsla(0, 0%, 100%, 0.8);
   --tp-monitor-background-color: hsla(0, 0%, 0%, 0.3);
   --tp-monitor-foreground-color: hsla(246, 51%, 45%, 1);
+}
+
+.tp-dfwv {
+  width: 400px !important;
+  height: 500px !important;
+}
+.tp-rotv {
+  font-size: 1rem !important;
+  font-family: "Inter", sans-serif !important;
 }

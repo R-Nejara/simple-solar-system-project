@@ -19,9 +19,6 @@ const venusTexture = textureLoader.load("/textures/2k_venus_surface.jpg");
 const earthTexture = textureLoader.load("/textures/2k_earth_daymap.jpg");
 const moonTexture = textureLoader.load("/textures/2k_moon.jpg");
 const marsTexture = textureLoader.load("textures/2k_mars.jpg");
-const backgroundTexture = textureLoader.load(
-  "/textures/2k_stars_milky_way.jpg"
-);
 cubeTextureLoader.setPath("textures/cubeMap/");
 const cubeMapBackground = cubeTextureLoader.load([
   "px.png",
@@ -31,6 +28,8 @@ const cubeMapBackground = cubeTextureLoader.load([
   "pz.png",
   "nz.png",
 ]);
+cubeMapBackground.colorSpace = THREE.SRGBColorSpace;
+
 scene.background = cubeMapBackground;
 // add materials
 const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });
@@ -147,9 +146,10 @@ camera.position.z = 100;
 camera.position.y = 5;
 
 // initialize light
-const pointLight = new THREE.PointLight(0xffffff, 200);
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.05);
+const pointLight = new THREE.PointLight(0xffffff, 400);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
 sun.add(pointLight);
+sun.add(ambientLight);
 
 // initialize the renderer
 const canvas = document.querySelector("canvas.threejs");

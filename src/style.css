@@ -1,5 +1,27 @@
 body {
-    margin: 0;
-    overflow: hidden;
-  }
-  
+  margin: 0;
+  overflow: hidden;
+}
+:root {
+  --tp-base-background-color: hsla(243, 40%, 11%, 0.8);
+  --tp-base-shadow-color: hsla(249, 84%, 46%, 0.2);
+  --tp-button-background-color: hsla(246, 51%, 45%, 1);
+  --tp-button-background-color-active: hsla(0, 0%, 100%, 0);
+  --tp-button-background-color-focus: hsla(246, 52%, 25%, 1);
+  --tp-button-background-color-hover: hsla(245, 52%, 63%, 1);
+  --tp-button-foreground-color: hsla(244, 0%, 100%, 0.8);
+  --tp-container-background-color: hsla(0, 0%, 0%, 0.3);
+  --tp-container-background-color-active: hsla(0, 0%, 0%, 0.6);
+  --tp-container-background-color-focus: hsla(0, 0%, 0%, 0.5);
+  --tp-container-background-color-hover: hsla(0, 0%, 0%, 0.4);
+  --tp-container-foreground-color: hsla(0, 0%, 100%, 0.8);
+  --tp-groove-foreground-color: hsla(0, 0%, 0%, 0.2);
+  --tp-input-background-color: hsla(0, 0%, 0%, 0.3);
+  --tp-input-background-color-active: hsla(0, 0%, 0%, 0.6);
+  --tp-input-background-color-focus: hsla(0, 0%, 0%, 0.5);
+  --tp-input-background-color-hover: hsla(0, 0%, 0%, 0.4);
+  --tp-input-foreground-color: hsla(0, 0%, 100%, 0.5);
+  --tp-label-foreground-color: hsla(0, 0%, 100%, 0.8);
+  --tp-monitor-background-color: hsla(0, 0%, 0%, 0.3);
+  --tp-monitor-foreground-color: hsla(246, 51%, 45%, 1);
+}

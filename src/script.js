@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { Pane } from "tweakpane";
+import { Pane } from "../node_modules/tweakpane/dist/tweakpane.js";
 
 // initialize pane
 const pane = new Pane();
@@ -108,6 +108,7 @@ const createPlanet = (planet) => {
   //create the mesh and add it to the scene
   const planetMesh = new THREE.Mesh(sphereGeometry, planet.material);
   //set the scale
+  planetMesh.name = planet.name;
   planetMesh.scale.setScalar(planet.radius);
   planetMesh.position.x = planet.distance;
   planetMesh.speed = planet.speed;
@@ -116,6 +117,7 @@ const createPlanet = (planet) => {
 };
 const createMoon = (moon) => {
   const moonMesh = new THREE.Mesh(sphereGeometry, moonMaterial);
+  moonMesh.name = moon.name;
   moonMesh.scale.setScalar(moon.radius);
   moonMesh.position.x = moon.distance;
   moonMesh.speed = moon.speed;
@@ -144,11 +146,10 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.z = 100;
 camera.position.y = 5;
 
-// initialize
+// initialize light
 const pointLight = new THREE.PointLight(0xffffff, 200);
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.05);
 sun.add(pointLight);
-sun.add(ambientLight);
 
 // initialize the renderer
 const canvas = document.querySelector("canvas.threejs");
@@ -169,13 +170,34 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
+// creating planet sliders
+const createPlanetSliders = () => {
+  const planetSliderParameters = {
+    min: -0.05,
+    max: 0.05,
+    step: 0.001,
+  };
+  planetMeshes.forEach((planet) => {
+    const planetPane = pane.addFolder({ title: planet.name });
+    planetPane.addBinding(planet, "speed", planetSliderParameters);
+    planet.children.forEach((child) => {
+      const childPlanet = planetPane.addFolder({
+        title: child.name,
+        expanded: false,
+      });
+      childPlanet.addBinding(child, "speed", planetSliderParameters);
+    });
+  });
+};
+createPlanetSliders();
+
 // Animating parent planets
 const animateParentPlanets = (planet) => {
   planet.rotation.y += planet.speed;
   planet.position.x = Math.sin(planet.rotation.y) * planet.distance;
   planet.position.z = Math.cos(planet.rotation.y) * planet.distance;
 };
-// Animating moons
+// Animating child planets
 const animateMoons = (moon) => {
   moon.rotation.y += moon.speed;
   moon.position.x = Math.sin(moon.rotation.y) * moon.distance;
@@ -192,7 +214,6 @@ const animatePlanets = () => {
     });
   });
 };
-
 // render loop
 const renderloop = () => {
   controls.update();

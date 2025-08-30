@@ -16,7 +16,7 @@ Es simuliert die Planetenbewegungen und erlaubt es, das Sonnensystem **live im B
 ## 🛠️ Technologien
 - **JavaScript**  
 - **Three.js**  
-- HTML & CSS  
+- **HTML & CSS** 
 
 ## 🔗 Live Demo
 [Hier klicken für Live-Demo](https://phenomenal-daffodil-400215.netlify.app/)
